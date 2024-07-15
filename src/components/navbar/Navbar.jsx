@@ -16,9 +16,9 @@ export default function Navbar() {
             <div className={styles.logo}>StoryTails</div>
             <div className={styles.links}>
                 <ThemeToggle />
-                <Link href='/'>Home</Link>
-                <Link href='/'>Contact</Link>
-                <Link href='/'>About</Link>
+                <Link href='/' className={styles.link}>Home</Link>
+                <Link href='/' className={styles.link}>Contact</Link>
+                <Link href='/' className={styles.link}>About</Link>
                 <AuthLinks />
             </div>
         </div>
