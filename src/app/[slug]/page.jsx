@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./singlePage.module.css";
 import Menu from "@/components/menu/Menu";
+import Comments from "@/components/comments/Comments";
 import Image from "next/image";
 
 export default function SinglePage() {
@@ -54,6 +55,9 @@ export default function SinglePage() {
               accusantium est ab voluptate fuga!
             </p>
           </div>
+        <div className={styles.comment}>
+          <Comments />
+        </div>
         </div>
         <Menu />
       </div>
