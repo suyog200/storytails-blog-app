@@ -9,7 +9,7 @@ export default function AuthLinks() {
   const status = "notAuthenticated";
   return (
     <>
-      {status === "notAuthenticated" ? (
+      {status === "Authenticated" ? (
         <Link href="/login" className={styles.link}>Login</Link>
       ) : (
         <>
