@@ -3,33 +3,44 @@ import styles from "./categoryList.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-const categories = [
-    { name: "style", href: "/blog?cat=style" },
-    { name: "fashion", href: "/blog?cat=fashion" },
-    { name: "food", href: "/blog?cat=food" },
-    { name: "coding", href: "/blog?cat=coding" },
-    { name: "travel", href: "/blog?cat=travel" },
-    { name: "culture", href: "/blog?cat=culture" }
-];
 
-export default function CategoryList() {
-    return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>Popular categories</h1>
-            <div className={styles.categories}>
-                {categories.map((category, index) => (
-                    <Link href={category.href} key={index} className={`${styles.category} ${styles[category.name]}`}>
-                        <Image 
-                            src={`/${category.name}.png`}
-                            alt={category.name}
-                            width={32}
-                            height={32}
-                            className={styles.image}
-                        />
-                        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
+const getData = async () => {
+  const res = await fetch("http://localhost:3000/api/categories", {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+  return res.json();
+};
+
+export default async function CategoryList() {
+  const data = await getData();
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>Popular Categories</h1>
+      <div className={styles.categories}>
+        {data?.map((item) => (
+          <Link
+            href="/blog?cat=style"
+            className={`${styles.category} ${styles[item.slug]}`}
+            key={item._id}
+          >
+            {item.img && (
+              <Image
+                src={item.img}
+                alt=""
+                width={32}
+                height={32}
+                className={styles.image}
+              />
+            )}
+            {item.title}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
