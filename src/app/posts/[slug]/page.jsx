@@ -4,7 +4,23 @@ import Menu from "@/components/menu/Menu";
 import Comments from "@/components/comments/Comments";
 import Image from "next/image";
 
-export default function SinglePage() {
+const getData = async (page, cat) => {
+  const res = await fetch(
+    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed");
+  }
+
+  return res.json();
+};
+
+
+export default async function SinglePage() {
   return (
     <div className={styles.container}>
       <div className={styles.infoContainer}>

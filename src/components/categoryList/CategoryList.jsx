@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./categoryList.module.css";
-import Image from "next/image";
 import Link from "next/link";
-
+import Image from "next/image";
 
 const getData = async () => {
   const res = await fetch("http://localhost:3000/api/categories", {
@@ -10,12 +9,13 @@ const getData = async () => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch categories");
+    throw new Error("Failed");
   }
+
   return res.json();
 };
 
-export default async function CategoryList() {
+const CategoryList = async () => {
   const data = await getData();
 
   return (
@@ -43,4 +43,6 @@ export default async function CategoryList() {
       </div>
     </div>
   );
-}
+};
+
+export default CategoryList;
