@@ -1,82 +1,69 @@
-import React from "react";
+import Menu from "@/components/Menu/Menu";
 import styles from "./singlePage.module.css";
-import Menu from "@/components/menu/Menu";
-import Comments from "@/components/comments/Comments";
 import Image from "next/image";
+import Comments from "@/components/comments/Comments";
 
-const getData = async (page, cat) => {
-  const res = await fetch(
-    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}`,
-    {
-      cache: "no-store",
-    }
-  );
+const getData = async (slug) => {
+  const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) {
-    throw new Error("Failed");
+    throw new Error("Failed to fetch data");
   }
 
   return res.json();
 };
 
+const SinglePage = async ({ params }) => {
+  const { slug } = params;
 
-export default async function SinglePage() {
+  let data;
+  try {
+    data = await getData(slug);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+    return <div className={styles.container}>Failed to load post data.</div>;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.infoContainer}>
         <div className={styles.textContainer}>
-          <h1 className={styles.title}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus,
-            architecto?
-          </h1>
+          <h1 className={styles.title}>{data?.title || 'No Title'}</h1>
           <div className={styles.user}>
-            <div className={styles.userImageContainer}>
-              <Image src="/p1.jpeg" alt="" fill className={styles.avatar} />
-            </div>
+            {data?.user?.image && (
+              <div className={styles.userImageContainer}>
+                <Image src={data.user.image} alt="User Avatar" fill className={styles.avatar} />
+              </div>
+            )}
             <div className={styles.userTextContainer}>
-              <span className={styles.username}>John Doe</span>
-              <span className={styles.date}>17.07.2024</span>
+              <span className={styles.username}>{data?.user?.name || 'Unknown User'}</span>
+              <span className={styles.date}>01.01.2024</span>
             </div>
           </div>
         </div>
-        <div className={styles.imageContainer}>
-          <Image src="/p1.jpeg" alt="" fill className={styles.image} />
-        </div>
+        {data?.img && (
+          <div className={styles.imageContainer}>
+            <Image src={data.img} alt="Post Image" fill className={styles.image} />
+          </div>
+        )}
       </div>
       <div className={styles.content}>
         <div className={styles.post}>
-          <div className={styles.description}>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Aspernatur quae vel mollitia nobis dolores reprehenderit
-              accusantium est ab voluptate fuga!
-            </p>
-            <h1>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Consequatur, quisquam!
-            </h1>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Aspernatur quae vel mollitia nobis dolores reprehenderit
-              accusantium est ab voluptate fuga!
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Aspernatur quae vel mollitia nobis dolores reprehenderit
-              accusantium est ab voluptate fuga!
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Aspernatur quae vel mollitia nobis dolores reprehenderit
-              accusantium est ab voluptate fuga!
-            </p>
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: data?.desc || '' }}
+          />
+          <div className={styles.comment}>
+            <Comments postSlug={slug} />
           </div>
-        <div className={styles.comment}>
-          <Comments />
-        </div>
         </div>
         <Menu />
       </div>
     </div>
   );
-}
+};
+
+export default SinglePage;
