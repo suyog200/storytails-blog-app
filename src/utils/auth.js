@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./connect";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { getServerSession } from "next-auth";
 
 
 const googleID = process.env.GOOGLE_ID;
@@ -21,4 +22,6 @@ export const authOptions = {
             clientSecret: googleSecret,
         })    
     ]
-}
+};
+
+export const getAuthSession = () => getServerSession( authOptions );
