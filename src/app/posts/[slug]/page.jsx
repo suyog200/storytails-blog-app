@@ -9,7 +9,7 @@ const getData = async (slug) => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    throw new Error("Failed");
   }
 
   return res.json();
@@ -18,35 +18,29 @@ const getData = async (slug) => {
 const SinglePage = async ({ params }) => {
   const { slug } = params;
 
-  let data;
-  try {
-    data = await getData(slug);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-    return <div className={styles.container}>Failed to load post data.</div>;
-  }
+  const data = await getData(slug);
+  console.log(data);
 
   return (
     <div className={styles.container}>
       <div className={styles.infoContainer}>
         <div className={styles.textContainer}>
-          <h1 className={styles.title}>{data?.title || 'No Title'}</h1>
+          <h1 className={styles.title}>{data?.title}</h1>
           <div className={styles.user}>
             {data?.user?.image && (
               <div className={styles.userImageContainer}>
-                <Image src={data.user.image} alt="User Avatar" fill className={styles.avatar} />
+                <Image src={data.user.image} alt="" fill className={styles.avatar} />
               </div>
             )}
             <div className={styles.userTextContainer}>
-              <span className={styles.username}>{data?.user?.name || 'Unknown User'}</span>
+              <span className={styles.username}>{data?.user.name}</span>
               <span className={styles.date}>01.01.2024</span>
             </div>
           </div>
         </div>
         {data?.img && (
           <div className={styles.imageContainer}>
-            <Image src={data.img} alt="Post Image" fill className={styles.image} />
+            <Image src={data.img} alt="" fill className={styles.image} />
           </div>
         )}
       </div>
@@ -54,10 +48,10 @@ const SinglePage = async ({ params }) => {
         <div className={styles.post}>
           <div
             className={styles.description}
-            dangerouslySetInnerHTML={{ __html: data?.desc || '' }}
+            dangerouslySetInnerHTML={{ __html: data?.desc }}
           />
           <div className={styles.comment}>
-            <Comments postSlug={slug} />
+            <Comments postSlug={slug}/>
           </div>
         </div>
         <Menu />
