@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React from "react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -10,29 +10,40 @@ import { useSession } from "next-auth/react";
 
 export default function WritePage() {
   const { status } = useSession();
-  const [open, setOpen] = useState(false);
-  const [value,setValue] = useState("");
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [file, setFile] = useState(null);
 
-  if(status === "loading") {
-      return <div className={styles.loading}>Loading...</div>
+  if (status === "loading") {
+    return <div className={styles.loading}>Loading...</div>;
   }
 
-  if(status === "authenticated") {
-     router.push("/");
+  if (status === "unauthenticated") {
+    router.push("/");
   }
 
   return (
     <div className={styles.container}>
-      <input type="text" placeholder="Title" className={styles.input}/>
+      <input type="text" placeholder="Title" className={styles.input} />
       <div className={styles.editor}>
         <button className={styles.button} onClick={() => setOpen(!open)}>
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
         {open && (
           <div className={styles.add}>
+            <input
+              type="file"
+              id="image"
+              onChange={(e) => setFile(e.target.files[0])}
+              style={{
+                display: "none",
+              }}
+            />
             <button className={styles.addButton}>
-              <Image src="/image.png" alt="" width={16} height={16} />
+              <label htmlFor="image">
+                <Image src="/image.png" alt="" width={16} height={16} />
+              </label>
             </button>
             <button className={styles.addButton}>
               <Image src="/external.png" alt="" width={16} height={16} />
@@ -42,7 +53,13 @@ export default function WritePage() {
             </button>
           </div>
         )}
-        <ReactQuill theme="bubble" value={value} onChange={setValue} placeholder="Tell your story..." className={styles.textArea}/>
+        <ReactQuill
+          theme="bubble"
+          value={value}
+          onChange={setValue}
+          placeholder="Tell your story..."
+          className={styles.textArea}
+        />
       </div>
       <button className={styles.publish}>Publish</button>
     </div>
